@@ -1,5 +1,8 @@
 <x-app-layout>
   <x-slot name="header">
+    <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+      {{ __('PRODOTTI') }}
+  </h2>
   </x-slot>
   
   <section class=" py-1 bg-blueGray-50">
@@ -32,7 +35,8 @@
             <button class="bg-pink-500 text-white active:bg-pink-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150" type="submit">Invia</button>
           </form> 
         </div>
-        <div class="flex justify-center mt-6">
+
+        <div class="flex px-5 justify-center ">
           <table class="min-w-full border-collapse block md:table">
             <thead class="block md:table-header-group">
               <tr class="border border-grey-500 md:border-none block md:table-row absolute -top-full md:top-auto -left-full md:left-auto  md:relative ">
@@ -68,9 +72,8 @@
                 <tr class="bg-gray-300 border border-grey-500 md:border-none block md:table-row">
                   <td class="p-2 md:border md:border-grey-500 text-left block md:table-cell"><span class="inline-block w-1/3 md:hidden font-bold"></span>{{$product->name}}</td>
                   <td class="p-2 md:border md:border-grey-500 text-left block md:table-cell"><span class="inline-block w-1/3 md:hidden font-bold"></span>{{$product->price}}</td>
-                  <td class="p-2 md:border md:border-grey-500 text-left block md:table-cell">
-                    <span class="inline-block w-1/3 md:hidden font-bold">Actions</span>
-                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 border border-blue-500 rounded"><a href="{{route('product.edit',$product->id)}}">Edit</a></button>
+                  <td class="p-2 flex md:border md:border-grey-500  ">
+                    <button class="bg-blue-500 mx-3 hover:bg-blue-700 text-white font-bold py-1 px-2 border border-blue-500 rounded"><a href="{{route('product.edit',$product->id)}}">Edit</a></button>
                     <form action="{{route('product.destroy', $product->id)}}" method="POST">
                       @csrf
                       @method('DELETE')
@@ -82,7 +85,7 @@
             </tbody>
           </table>
         </div>
-        <div class="flex justify-center">
+        <div class="flex p-5 justify-center">
           {{ $products->links() }} 
         </div>
       </div>
