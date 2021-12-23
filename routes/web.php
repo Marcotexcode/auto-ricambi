@@ -28,12 +28,16 @@ Route::get('/dashboard', function () {
 
 require __DIR__.'/auth.php';
 
-
+// Rotte controller
 Route::resource('product', ProductController::class);
 
 Route::get('/prodotti', [ProductController::class, 'index']);
 
 Route::post('/prodottiStore', [ProductController::class, 'store'])->name('prodottiStore');
 
+// Rotte controller filtri
 Route::get('/filterOrder', [ProductController::class, 'filterOrder'])->name('filterOrder');
 
+Route::get('/filterSearch', [ProductController::class, 'filterSearch'])->name('filterSearch');
+
+Route::get('/filterClear', [ProductController::class, 'filterClear'])->name('filterClear');
