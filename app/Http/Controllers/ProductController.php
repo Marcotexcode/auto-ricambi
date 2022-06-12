@@ -11,37 +11,18 @@ class ProductController extends Controller
     {
         $products = Product::query();
         $vista = false;
-
-        $filtriOrder = session('filterOrder');
-        $filterSearch = session('filterSearch');
-
-        if($filterSearch['nomeProdotto']) {
-            $products = $products->where('name', 'LIKE', "%{$filterSearch['nomeProdotto']}%");
-        }
-
-        if($filterSearch['prezzoProdotto']) {
-            $products = $products->where('price', 'LIKE', "%{$filterSearch['prezzoProdotto']}%");
-        }
-
-        if ($filtriOrder['nome'] == 'comAsc') {
-            $products = $products->orderBy('name', 'asc');
-        } elseif ($filtriOrder['nome'] == 'comDsc') {
-            $products = $products->orderBy('name', 'desc');
-        } elseif ($filtriOrder['prezzo'] == 'comAsc') {
-            $products = $products->orderBy('price', 'asc');
-        } elseif ($filtriOrder['prezzo'] == 'comDsc') {
-            $products = $products->orderBy('price', 'desc');
-        } else {
-            $products = $products->orderBy('created_at', 'asc');
-        }
-
-        $products = $products->paginate(10);
+        $products = $this->preparaDati($products);
         
         return view('prodotti.index', compact('products', 'vista'));
     }
 
     public function store(Request $request)
     {
+        $request->validate([
+            'name' => 'required|max:20',
+            'price' => 'required|max:5',
+        ]);
+
         $tableProduct = Product::create($request->all());
 
         return redirect('prodotti');
@@ -51,31 +32,7 @@ class ProductController extends Controller
     {  
         $products = Product::query();
         $vista = true;
-
-        $filtriOrder = session('filterOrder');
-        $filterSearch = session('filterSearch');
-
-        if($filterSearch['nomeProdotto']) {
-            $products = $products->where('name', 'LIKE', "%{$filterSearch['nomeProdotto']}%");
-        }
-
-        if($filterSearch['prezzoProdotto']) {
-            $products = $products->where('price', 'LIKE', "%{$filterSearch['prezzoProdotto']}%");
-        }
-
-        if ($filtriOrder['nome'] == 'comAsc') {
-            $products = $products->orderBy('name', 'asc');
-        } elseif ($filtriOrder['nome'] == 'comDsc') {
-            $products = $products->orderBy('name', 'desc');
-        } elseif ($filtriOrder['prezzo'] == 'comAsc') {
-            $products = $products->orderBy('price', 'asc');
-        } elseif ($filtriOrder['prezzo'] == 'comDsc') {
-            $products = $products->orderBy('price', 'desc');
-        } else {
-            $products = $products->orderBy('name', 'asc');
-        }
-
-        $products = $products->paginate(10);
+        $products = $this->preparaDati($products);
 
         return view('prodotti.index', compact('product','products','vista'));
     }
@@ -125,6 +82,37 @@ class ProductController extends Controller
         session()->forget('filterSearch');
 
         return redirect('prodotti');
+    }  
+
+    // Funzioni create
+    private function preparaDati($products)
+    {
+        $filtriOrder = session('filterOrder');
+        $filterSearch = session('filterSearch');
+
+        // Filtri Search
+        if(isset($filterSearch['nomeProdotto'])) {
+            $products = $products->where('name', 'LIKE', "%{$filterSearch['nomeProdotto']}%");
+        }
+
+        if(isset($filterSearch['prezzoProdotto'])) {
+            $products = $products->where('price', 'LIKE', "%{$filterSearch['prezzoProdotto']}%");
+        }
+
+        // Filtri Order
+        if ($filtriOrder['nome'] == 'comAsc') {
+            $products = $products->orderBy('name', 'asc');
+        } elseif ($filtriOrder['nome'] == 'comDsc') {
+            $products = $products->orderBy('name', 'desc');
+        } elseif ($filtriOrder['prezzo'] == 'comAsc') {
+            $products = $products->orderBy('price', 'asc');
+        } elseif ($filtriOrder['prezzo'] == 'comDsc') {
+            $products = $products->orderBy('price', 'desc');
+        } else {
+            $products = $products->orderBy('created_at', 'asc');
+        }
+        
+        return $products->paginate(4);
     }
 
 }
